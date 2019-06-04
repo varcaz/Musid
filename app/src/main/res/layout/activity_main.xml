@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:gravity="bottom"
+    tools:context=".Activity.MainActivity"
+    app:umanoPanelHeight="60dp"
+    app:umanoFadeColor="#000000"
+    app:umanoShadowHeight="10dp"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout
+        android:id="@+id/main_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@null">
+
+        <Button
+            android:id="@+id/background_change_button"
+            android:layout_width="90dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="8dp"
+            android:background="@null"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </RelativeLayout>
+
+    <com.jcminarro.roundkornerlayout.RoundKornerRelativeLayout
+        android:id="@+id/slider_container"
+        app:top_left_corner_radius="20dp"
+        app:top_right_corner_radius="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@null">
+
+    </com.jcminarro.roundkornerlayout.RoundKornerRelativeLayout>
+
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>

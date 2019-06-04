@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:duration="http://schemas.android.com/apk/res-auto"
+    xmlns:androidduration="http://schemas.android.com/tools">
+    <alpha
+        android:fromAlpha="0.0"
+        android:toAlpha="1.0"
+        android:duration="100" />
+    <translate
+        android:fromYDelta="-500"
+        android:toYDelta="0"
+        android:duration="250" />
+    <scale
+        android:fromYScale="0.0"
+        android:toYScale="1.0"
+        android:duration="250" />
+
+</set>

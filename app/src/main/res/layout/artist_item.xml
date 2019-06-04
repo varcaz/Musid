@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/single_artist"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent"
+    android:padding="10dp"
+    android:layout_gravity="center">
+
+    <androidx.cardview.widget.CardView
+
+        android:layout_marginTop="70dp"
+        android:layout_width="170dp"
+        android:layout_height="120dp"
+        app:cardCornerRadius="10dp"
+        app:cardBackgroundColor="@color/transparentGrey"
+        app:cardElevation="0dp"
+
+        android:layout_gravity="center_horizontal">
+
+        <LinearLayout
+            android:paddingTop="70dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@null">
+
+            <TextView
+                android:id="@+id/tv_artist_item_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="Favorite"
+                android:singleLine="true"
+                android:paddingHorizontal="20dp"
+                android:background="@null"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:textColor="@color/subtextColor" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@null"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/subtextColor"
+
+                    android:textSize="8sp"
+                    android:text="songs " />
+
+                <TextView
+                    android:id="@+id/tv_artists_songs_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/subtextColor"
+                    android:text="0"
+                    android:textSize="8sp" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/subtextColor"
+
+                    android:textSize="8sp"
+                    android:text=" | Albums " />
+
+                <TextView
+                    android:id="@+id/tv_artists_albums_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/subtextColor"
+                    android:text="0"
+                    android:textSize="8sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/iv_artist_art"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="0dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/default_music_art"
+        app:riv_border_color="@color/subtextColor"
+        app:riv_border_width="1dp"
+        app:riv_corner_radius="10dp"
+        android:layout_centerHorizontal="true" />
+</RelativeLayout>

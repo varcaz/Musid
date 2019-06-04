@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/single_track"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    android:paddingVertical="3dp"
+    android:background="@null">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/track_song_art"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:scaleType="centerCrop"
+            android:layout_marginStart="8dp"
+            app:riv_corner_radius="25dp"
+            app:riv_border_color="@color/subtextColor"
+            app:riv_border_width="1dp"
+            android:layout_marginTop="8dp"
+            android:clickable="false"
+            android:src="@drawable/default_music_art" />
+
+
+        <LinearLayout
+
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="vertical"
+
+            app:layout_constraintStart_toEndOf="@+id/album_art"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/track_song_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="Treat You Better"
+                android:singleLine="true"
+                android:textColor="@color/cardview_dark_background"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/track_artist_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="Shawn Mendus"
+
+                android:textColor="@color/subtextColor"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <RadioButton
+            android:id="@+id/radio_add_song"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</LinearLayout>

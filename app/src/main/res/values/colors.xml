@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#2B2B2B</color>
+    <!--2A2A2A-->
+    <color name="colorAccent">#F55730</color>
+    <color name="transparent">#0000ffff</color>
+    <color name="backgroundColor">#ffff</color>
+    <color name="textColor">#ffff</color>
+    <color name="subtextColor">#BBBBBB</color>
+    <color name="songTimerColor">#484848</color>
+    <color name="transparentGrey">#16ffffff</color>
+    <color name="dialogColor">#64ffffff</color>
+    <color name="darkgrey">#3C3F41</color>
+</resources>
