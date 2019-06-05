@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         setContentView(R.layout.activity_main);
         backgroundIndex = sharedPreferences.getInt("backgroundIndex", 1);
         mainFragment = new mainFragment();
-//        slidinglayout = findViewById(R.id.activity_main);
+        slidinglayout = findViewById(R.id.activity_main);
 
 
         int permissionReadCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);

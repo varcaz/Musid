@@ -63,6 +63,9 @@ public class TrackRecycleAdapter extends RecyclerView.Adapter<TrackRecycleAdapte
         TextView d_songComposer = dialog.findViewById(R.id.dialog_song_composer);
         ImageView d_songArt = dialog.findViewById(R.id.dialog_song_art);
 
+        Button playbutton=dialog.findViewById(R.id.playbutton_dialog_track);
+        Button playnext=dialog.findViewById(R.id.playNextbutton_dialog_track);
+
 //        RelativeLayout relativeLayoutdialog=dialog.findViewById(R.id.dialog_relative_layout);
 //        relativeLayoutdialog.setAlpha(0.8f);
 
@@ -96,7 +99,6 @@ public class TrackRecycleAdapter extends RecyclerView.Adapter<TrackRecycleAdapte
                 dialog.show();
 
                 if(dialog.isShowing()){
-                    Button playbutton=dialog.findViewById(R.id.playbutton_dialog_track);
                     playbutton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -105,27 +107,20 @@ public class TrackRecycleAdapter extends RecyclerView.Adapter<TrackRecycleAdapte
 
                         }
                     });
-                    playbutton.setOnClickListener(new View.OnClickListener() {
+                    playnext.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             new Thread(()->{
                                int pos=trackRecyclerrHolder.getAdapterPosition();
-                                Handler handler=new Handler();
-                                Runnable r=new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        while( MainActivity.getServiceInstance().mediaPlayer.getCurrentPosition()< MainActivity.getServiceInstance().mediaPlayer.getDuration()){
-                                            handler.postDelayed(this,500);
-                                            if(dialog.isShowing())
-                                                dialog.dismiss();
+                                        dialog.cancel();
+                                        while( MainActivity.getServiceInstance().mediaPlayer.getCurrentPosition()== MainActivity.getServiceInstance().mediaPlayer.getDuration()){
                                         }
                                         MainActivity.getServiceInstance().setSelectedSong(tracksInfoList,pos );
-                                    }
-                                };
+
+                                });
 
 
 
-                            }).start();
 
                         }
                     });
