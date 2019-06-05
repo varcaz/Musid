@@ -8,10 +8,12 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,11 +27,13 @@ import com.varcaz.musid.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.LogRecord;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import Interfaces.songClickListener;
+import MediaPlayer.MediaService;
 
 public class TrackRecycleAdapter extends RecyclerView.Adapter<TrackRecycleAdapter.TrackRecyclerrHolder> {
 
@@ -90,6 +94,46 @@ public class TrackRecycleAdapter extends RecyclerView.Adapter<TrackRecycleAdapte
                     d_songArt.setImageResource(R.drawable.default_music_art);
 
                 dialog.show();
+
+                if(dialog.isShowing()){
+                    Button playbutton=dialog.findViewById(R.id.playbutton_dialog_track);
+                    playbutton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            MainActivity.getServiceInstance().setSelectedSong(tracksInfoList, trackRecyclerrHolder.getAdapterPosition());
+                            dialog.dismiss();
+
+                        }
+                    });
+                    playbutton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            new Thread(()->{
+                               int pos=trackRecyclerrHolder.getAdapterPosition();
+                                Handler handler=new Handler();
+                                Runnable r=new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        while( MainActivity.getServiceInstance().mediaPlayer.getCurrentPosition()< MainActivity.getServiceInstance().mediaPlayer.getDuration()){
+                                            handler.postDelayed(this,500);
+                                            if(dialog.isShowing())
+                                                dialog.dismiss();
+                                        }
+                                        MainActivity.getServiceInstance().setSelectedSong(tracksInfoList,pos );
+                                    }
+                                };
+
+
+
+                            }).start();
+
+                        }
+                    });
+
+
+                }
+
+
                 return true;
 
             }

@@ -578,6 +578,9 @@ public class DataSource extends SQLiteOpenHelper {
 
     public static void deletePlaylist(SQLiteDatabase db, int playlist_id) {
         try {
+            try {
+                db.delete(PLAYLIST_SONGS_TABLE, PLAYLIST_SONGS_PLAYLIST_ID_COLUMN + "=" + playlist_id, null);
+            }catch (Exception e){}
             db.delete(PLAYLIST.PLAYLIST_TABLE, PLAYLIST.PLAYLIST_ID_COLUMN + "=" + playlist_id, null);
         } catch (Exception e) {
 

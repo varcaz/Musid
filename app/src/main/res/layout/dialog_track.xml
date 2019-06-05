@@ -138,6 +138,7 @@
             </LinearLayout>
 
             <Button
+                android:id="@+id/playbutton_dialog_track"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
@@ -148,6 +149,8 @@
                 android:drawableLeft="@drawable/ic_play_next" />
 
             <Button
+
+                android:id="@+id/playNextbutton_dialog_track"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
@@ -158,6 +161,8 @@
                 android:drawableLeft="@drawable/ic_queue_play_next" />
 
             <Button
+
+                android:id="@+id/setAsRingTone_dialog_track"
                 android:background="@color/textColor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
