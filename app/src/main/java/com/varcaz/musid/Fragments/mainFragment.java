@@ -113,6 +113,7 @@ public class mainFragment extends Fragment {
         adapter.AddFragment(new albumsFragment(), "");
         adapter.AddFragment(new artistsFragment(), "");
         viewPager.setAdapter(adapter);
+        viewPager.setOffscreenPageLimit(3);
         tabLayout.setupWithViewPager(viewPager);
 
         int continuatoinIndex = viewPagerPreferences.getInt(restoreViewPagerIndexTAG, 1);

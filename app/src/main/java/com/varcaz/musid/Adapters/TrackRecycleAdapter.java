@@ -117,7 +117,7 @@ public class TrackRecycleAdapter extends RecyclerView.Adapter<TrackRecycleAdapte
                                         }
                                         MainActivity.getServiceInstance().setSelectedSong(tracksInfoList,pos );
 
-                                });
+                                }).start();
 
 
 

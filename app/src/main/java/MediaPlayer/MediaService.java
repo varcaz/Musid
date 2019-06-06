@@ -53,7 +53,7 @@ public class MediaService extends Service implements MediaPlayer.OnPreparedListe
 
     private int SONG_POS;
     private int NOTIFICATION_ID = 1121;
-    ArrayList<MediaInfo> mediaInfoArrayList;
+    static ArrayList<MediaInfo> mediaInfoArrayList;
 
     public MediaPlayer mediaPlayer;
     private IBinder mediaBinder = new PlayerBinder();
@@ -82,7 +82,7 @@ public class MediaService extends Service implements MediaPlayer.OnPreparedListe
 
             }
         }
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
     public void stopSong() {
