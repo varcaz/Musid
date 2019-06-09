@@ -97,6 +97,7 @@ public class playlistsFragment extends Fragment {
         Log.i("Playlist", "playlist ok frgmet " + playlistInfoList.get(0).getPlatlistName());
         playlistRecylcerView.setAdapter(new PlaylistRecycleAdapter(playlistInfoList, getContext(), itemClickListener));
         playlistRecylcerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        playlistRecylcerView.setItemViewCacheSize(20);
         addPlaylistButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,6 +131,7 @@ public class playlistsFragment extends Fragment {
                                 Log.i("Playlist", "new Playlist");
                                 playlistRecylcerView.setAdapter(new PlaylistRecycleAdapter(playlistInfoList, getContext(), itemClickListener));
                                 playlistRecylcerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+                                playlistRecylcerView.setItemViewCacheSize(20);
                                 dialog.cancel();
                             }
                         }

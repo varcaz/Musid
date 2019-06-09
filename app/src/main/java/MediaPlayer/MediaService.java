@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Binder;
-import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.text.TextUtils;
@@ -22,7 +21,6 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
-import com.varcaz.musid.Activity.MainActivity;
 import com.varcaz.musid.EntityClass.MediaInfo;
 import com.varcaz.musid.Fragments.sliderFragment;
 import com.varcaz.musid.R;

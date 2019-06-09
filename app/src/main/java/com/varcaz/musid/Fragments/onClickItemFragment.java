@@ -91,6 +91,7 @@ public class onClickItemFragment extends Fragment {
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setItemViewCacheSize(20);
         new Thread(() -> {
             DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
             dividerItemDecoration.setDrawable(new ColorDrawable(Color.parseColor("#16ffffff")));
@@ -179,6 +180,7 @@ public class onClickItemFragment extends Fragment {
                                         Log.i("playlistsongs", "playlist song already false");
                                         recyclerView.setAdapter(adapter);
                                         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                                        recyclerView.setItemViewCacheSize(20);
                                         selectSongDialog.cancel();
                                     }
 

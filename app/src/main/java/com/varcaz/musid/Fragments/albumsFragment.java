@@ -75,7 +75,7 @@ public class albumsFragment extends Fragment {
         }
         recyclerView.setAdapter(new AlbumRecycleAdapter(albumInfoList, getContext(), itemClickListener));
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-
+        recyclerView.setItemViewCacheSize(20);
 
         return view;
     }

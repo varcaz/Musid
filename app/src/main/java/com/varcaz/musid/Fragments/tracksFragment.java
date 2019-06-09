@@ -67,6 +67,7 @@ public class tracksFragment extends Fragment {
 
         TrackRecycleAdapter trackRecycleAdapter = new TrackRecycleAdapter(getContext(), mediaInfoList);
         recyclerView.setAdapter(trackRecycleAdapter);
+        recyclerView.setItemViewCacheSize(20);
 
         return view;
     }

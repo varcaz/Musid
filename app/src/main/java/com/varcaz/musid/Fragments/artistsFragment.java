@@ -69,7 +69,7 @@ public class artistsFragment extends Fragment {
         }
         recyclerView.setAdapter(new ArtistRecycleAdapter(artistsInfoList, getContext(), itemClickListener));
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-
+        recyclerView.setItemViewCacheSize(20);
 
         return view;
     }

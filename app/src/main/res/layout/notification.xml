@@ -1,106 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="65dp"
+    android:layout_height="80dp"
     android:orientation="horizontal">
 
-
-    <ImageButton
-        android:id="@+id/notificaton_album_art"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:clickable="false"
-
-        />
-
     <LinearLayout
-        android:id="@+id/current_song_text"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="5dp"
-        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-        >
+        <ImageButton
+            android:id="@+id/notificaton_album_art"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:clickable="false"
 
-        <TextView
-            android:id="@+id/notification_song_name"
+            />
+
+        <LinearLayout
+            android:id="@+id/current_song_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:layout_marginLeft="5dp"
-            android:text="Treat You Better"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical"
 
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="16sp" />
+            >
 
-        <TextView
-            android:id="@+id/notification_artist_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="Shawn Mendus"
+            <TextView
+                android:id="@+id/notification_song_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:layout_marginLeft="5dp"
+                android:text="Treat You Better"
 
-            android:textColor="@color/darkgrey"
-            android:textSize="11sp" />
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/notification_artist_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="Shawn Mendus"
+
+                android:textColor="@color/darkgrey"
+                android:textSize="11sp" />
+        </LinearLayout>
+
     </LinearLayout>
 
-
-    <ImageButton
-        android:id="@+id/not_backward_button"
-        android:layout_width="35dp"
-        android:layout_height="30dp"
-        android:layout_gravity="center_vertical"
-        android:background="@null"
-
-        android:scaleType="fitCenter"
-        android:src="@drawable/prev_black" />
-
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center">
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:orientation="horizontal">
 
         <ImageButton
-            android:id="@+id/not_play_button"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:clickable="true"
+            android:id="@+id/not_backward_button"
+            android:layout_width="35dp"
+            android:layout_height="30dp"
             android:layout_gravity="center_vertical"
             android:background="@null"
-            android:src="@drawable/play_button"
+
             android:scaleType="fitCenter"
-            android:visibility="gone" />
+            android:src="@drawable/prev_black" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <ImageButton
+                android:id="@+id/not_play_button"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_vertical"
+                android:background="@null"
+                android:clickable="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/play_button"
+                android:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/not_pause_button"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_vertical"
+                android:background="@null"
+                android:clickable="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/pause_button" />
+        </RelativeLayout>
 
         <ImageButton
-            android:id="@+id/not_pause_button"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:clickable="true"
+            android:id="@+id/not_forward_button"
+            android:layout_width="35dp"
+            android:layout_height="30dp"
             android:layout_gravity="center_vertical"
+
             android:background="@null"
-            android:src="@drawable/pause_button"
-            android:scaleType="fitCenter" />
-    </RelativeLayout>
+            android:scaleType="fitCenter"
 
-    <ImageButton
-        android:id="@+id/not_forward_button"
-        android:layout_width="35dp"
-        android:layout_gravity="center_vertical"
-        android:layout_height="30dp"
+            android:src="@drawable/next_black" />
 
-        android:background="@null"
-        android:scaleType="fitCenter"
+        <ImageButton
+            android:id="@+id/not_stop_btn"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@color/transparent"
+            android:src="@drawable/ic_close_btn" />
 
-        android:src="@drawable/next_black" />
-
-    <ImageButton
-        android:id="@+id/not_stop_btn"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:background="@color/transparent"
-        android:src="@drawable/ic_close_btn" />
-</LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
