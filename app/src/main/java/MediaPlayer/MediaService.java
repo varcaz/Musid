@@ -7,11 +7,17 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Icon;
+import android.media.Image;
 import android.media.MediaPlayer;
+import android.media.session.MediaSession;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -60,6 +66,11 @@ public class MediaService extends Service implements MediaPlayer.OnPreparedListe
     RemoteViews notificatoinView;
     RemoteViews emptyView;
     NotificationManager notificationManager;
+    MediaSession mediaSession;
+    Notification.Action action_prev;
+    Notification.Action action_stop;
+    Notification.Action action_next;
+    Notification.Action action_pause;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -109,6 +120,7 @@ public class MediaService extends Service implements MediaPlayer.OnPreparedListe
     public void onCreate() {
         super.onCreate();
         mState = STATE_PAUSED;
+        mediaSession = new MediaSession(getApplicationContext(), "mediaSession");
         mediaPlayer = new MediaPlayer();
         initMediaPlayer();
         mediaPlayer.setOnPreparedListener(this);
@@ -306,20 +318,42 @@ public class MediaService extends Service implements MediaPlayer.OnPreparedListe
         intent = new Intent(ACTION_PAUSE);
         pendingIntent = PendingIntent.getService(getApplicationContext(), REQUEST_PAUSE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         notificatoinView.setOnClickPendingIntent(R.id.not_pause_button, pendingIntent);
+        action_pause = new Notification.Action.Builder(
+                Icon.createWithResource(this, R.drawable.ic_pause_black_24dp),
+                "Pause",
+                pendingIntent).build();
+
 
         intent = new Intent(ACTION_STOP);
         pendingIntent = PendingIntent.getService(getApplicationContext(), REQUEST_STOP, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         notificatoinView.setOnClickPendingIntent(R.id.not_stop_btn, pendingIntent);
+        action_stop = new Notification.Action.Builder(
+                Icon.createWithResource(this, R.drawable.ic_close_btn),
+                "Stop",
+                pendingIntent).build();
+
+
 
         intent = new Intent(ACTION_PREVIOUS);
         pendingIntent = PendingIntent.getService(getApplicationContext(), REQUEST_PREVIOUS, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         notificatoinView.setOnClickPendingIntent(R.id.not_backward_button, pendingIntent);
+        action_prev = new Notification.Action.Builder(
+                Icon.createWithResource(this, R.drawable.prev_black),
+                "Previous",
+                pendingIntent).build();
+
+
 
         intent = new Intent(ACTION_NEXT);
         pendingIntent = PendingIntent.getService(getApplicationContext(), REQUEST_NEXT, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         notificatoinView.setOnClickPendingIntent(R.id.not_forward_button, pendingIntent);
-        notificatoinView.setImageViewResource(R.id.not_pause_button, R.drawable.pause_button);
+        action_next = new Notification.Action.Builder(
+                Icon.createWithResource(this, R.drawable.next_black),
+                "Next",
+                pendingIntent).build();
 
+
+        notificatoinView.setImageViewResource(R.id.not_pause_button, R.drawable.pause_button);
 
         generateNotifcation();
     }
@@ -333,19 +367,36 @@ public class MediaService extends Service implements MediaPlayer.OnPreparedListe
 
             String description = getString(R.string.chanel_description);
 
-            int importance = NotificationManager.IMPORTANCE_HIGH;
+            int importance = NotificationManager.IMPORTANCE_LOW;
 
             NotificationChannel mChannel = null;
             mChannel = new NotificationChannel(id, name, importance);
             mChannel.setSound(null, null);
             mChannel.setVibrationPattern(new long[0]);
             mChannel.setDescription(description);
-
+            mChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
             notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            Bitmap largeIcon;
+            try {
+                largeIcon = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), mediaInfoArrayList.get(SONG_POS).getSong_art());
+            } catch (IOException e) {
+                largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.default_music_art);
+            }
+//            mNotification = noticatoinBuilder.setSmallIcon(R.drawable.ic_music_note_black_24dp).setOngoing(true).
+//                    setStyle(new Notification.MediaStyle().setMediaSession(mediaSession.getSessionToken())).setChannelId(id)
+////                    .setLargeIcon(largeIcon)
+//                    .setCustomBigContentView(notificatoinView).setCustomHeadsUpContentView(null).setCustomBigContentView()
+//                    .setWhen(System.currentTimeMillis())
+//                    .build();
+            mNotification = noticatoinBuilder.setSmallIcon(R.drawable.ic_music_note_black_24dp).setChannelId(id)
+                    .setLargeIcon(largeIcon).setContentTitle(mediaInfoArrayList.get(SONG_POS).getSongName())
+                    .setContentText(mediaInfoArrayList.get(SONG_POS).getArtist())
+                    .addAction(action_prev).addAction(action_pause).addAction(action_next).addAction(action_stop)
+                    .setStyle(new Notification.MediaStyle().setShowActionsInCompactView(0, 1, 2).setMediaSession(mediaSession.getSessionToken()))
 
-            mNotification = noticatoinBuilder.setSmallIcon(R.drawable.ic_music_note_black_24dp).setOngoing(true).setCustomHeadsUpContentView(emptyView).setChannelId(id)
                     .setWhen(System.currentTimeMillis())
-                    .setCustomBigContentView(notificatoinView).build();
+                    .build();
+
 
             notificationManager.createNotificationChannel(mChannel);
         }
