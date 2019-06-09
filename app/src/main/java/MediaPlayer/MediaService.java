@@ -343,8 +343,8 @@ public class MediaService extends Service implements MediaPlayer.OnPreparedListe
 
             notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-            mNotification = noticatoinBuilder.setSmallIcon(R.drawable.ic_music_note_black_24dp).setOngoing(true).setChannelId(id)
-                    .setWhen(System.currentTimeMillis()).setCustomHeadsUpContentView(emptyView)
+            mNotification = noticatoinBuilder.setSmallIcon(R.drawable.ic_music_note_black_24dp).setOngoing(true).setCustomHeadsUpContentView(emptyView).setChannelId(id)
+                    .setWhen(System.currentTimeMillis())
                     .setCustomBigContentView(notificatoinView).build();
 
             notificationManager.createNotificationChannel(mChannel);
