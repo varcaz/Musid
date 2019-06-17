@@ -11,10 +11,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.media.Rating;
-import android.media.session.MediaController;
 import android.media.session.MediaSession;
-import android.media.session.MediaSessionManager;
 import android.net.Uri;
+import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
@@ -35,25 +34,69 @@ import MediaLoaders.MediaQueries;
 
 public class MediaPlayerService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener {
 
-    public static final String ACTION_PLAY = "action_play";
-    public static final String ACTION_PAUSE = "action_pause";
-    public static final String ACTION_REWIND = "action_rewind";
-    public static final String ACTION_FAST_FORWARD = "action_fast_foward";
-    public static final String ACTION_NEXT = "action_next";
-    public static final String ACTION_PREVIOUS = "action_previous";
-    public static final String ACTION_STOP = "action_stop";
+    public static final String ACTION_PLAY = "com.varcaz.musid.PLAY";
+    public static final String ACTION_PAUSE = "com.varcaz.musid.PAUSE";
+    public static final String ACTION_REWIND = "com.varcaz.musid.REWIND";
+    public static final String ACTION_FAST_FORWARD = "com.varcaz.musid.FF";
+    public static final String ACTION_NEXT = "com.varcaz.musid.NEXT";
+    public static final String ACTION_PREVIOUS = "com.varcaz.musid.PREVIOUS";
+    public static final String ACTION_STOP = "com.varcaz.musid.STOP";
 
 
 
     private int SONG_POS;
     private int NOTIFICATION_ID = 1121;
     static ArrayList<MediaInfo> mediaInfoArrayList;
-    private static MediaPlayerService serviceInstance;
-
     public MediaPlayer mMediaPlayer;
-    public MediaSessionManager mManager;
     public MediaSession mSession;
     NotificationChannel mChannel = null;
+
+    Binder binder = new PlayerBinder();
+
+    private void buildNotification(Notification.Action action) {
+        Intent intent = new Intent(getApplicationContext(), MediaPlayerService.class);
+        intent.setAction(ACTION_STOP);
+        PendingIntent pendingIntent = PendingIntent.getService(getApplicationContext(), 1, intent, 0);
+
+        Bitmap largeIcon;
+        try {
+            largeIcon = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), mediaInfoArrayList.get(SONG_POS).getSong_art());
+        } catch (IOException e) {
+            largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.default_music_art);
+        }
+
+        Notification.Builder builder = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            builder = new Notification.Builder(getApplicationContext(), "my_channel_01");
+            Log.i("Inside notification", "inside notification");
+        } else builder = new Notification.Builder(getApplicationContext());
+        builder.addAction(generateAction(android.R.drawable.ic_media_previous, "Previous", ACTION_PREVIOUS));
+        builder.addAction(generateAction(android.R.drawable.ic_media_rew, "Rewind", ACTION_REWIND));
+        builder.addAction(action);
+        builder.addAction(generateAction(android.R.drawable.ic_media_ff, "Fast Foward", ACTION_FAST_FORWARD));
+        builder.addAction(generateAction(android.R.drawable.ic_media_next, "Next", ACTION_NEXT));
+
+        builder.setSmallIcon(R.drawable.ic_music_note_black_24dp)
+                .setLargeIcon(largeIcon)
+                .setContentTitle(mediaInfoArrayList.get(SONG_POS).getSongName())
+                .setContentText(mediaInfoArrayList.get(SONG_POS).getArtist())
+                .setDeleteIntent(pendingIntent)
+                .setStyle(new Notification.MediaStyle().setMediaSession(mSession.getSessionToken()).setShowActionsInCompactView(0, 2, 4));
+
+
+        builder.addAction(generateAction(android.R.drawable.ic_media_previous, "Previous", ACTION_PREVIOUS));
+        builder.addAction(generateAction(android.R.drawable.ic_media_rew, "Rewind", ACTION_REWIND));
+        builder.addAction(action);
+        builder.addAction(generateAction(android.R.drawable.ic_media_ff, "Fast Foward", ACTION_FAST_FORWARD));
+        builder.addAction(generateAction(android.R.drawable.ic_media_next, "Next", ACTION_NEXT));
+
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationManager.createNotificationChannel(mChannel);
+        }
+        notificationManager.notify(NOTIFICATION_ID, builder.build());
+    }
 
 
     @Override
@@ -92,47 +135,14 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
         return new Notification.Action.Builder(icon, title, pendingIntent).build();
     }
 
-    private void buildNotification(Notification.Action action) {
-        Notification.MediaStyle style = new Notification.MediaStyle();
-
-        Intent intent = new Intent(getApplicationContext(), MediaPlayerService.class);
-        intent.setAction(ACTION_STOP);
-        PendingIntent pendingIntent = PendingIntent.getService(getApplicationContext(), 1, intent, 0);
-
-        Bitmap largeIcon;
-        try {
-            largeIcon = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), mediaInfoArrayList.get(SONG_POS).getSong_art());
-        } catch (IOException e) {
-            largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.default_music_art);
-        }
-
-        Notification.Builder builder = new Notification.Builder(getApplicationContext())
-                .setSmallIcon(R.drawable.ic_music_note_black_24dp)
-                .setLargeIcon(largeIcon)
-                .setContentTitle(mediaInfoArrayList.get(SONG_POS).getSongName())
-                .setContentText(mediaInfoArrayList.get(SONG_POS).getArtist())
-                .setDeleteIntent(pendingIntent)
-                .setStyle(style);
-
-        builder.addAction(generateAction(android.R.drawable.ic_media_previous, "Previous", ACTION_PREVIOUS));
-        builder.addAction(generateAction(android.R.drawable.ic_media_rew, "Rewind", ACTION_REWIND));
-        builder.addAction(action);
-        builder.addAction(generateAction(android.R.drawable.ic_media_ff, "Fast Foward", ACTION_FAST_FORWARD));
-        builder.addAction(generateAction(android.R.drawable.ic_media_next, "Next", ACTION_NEXT));
-        style.setShowActionsInCompactView(0, 2, 4);
-
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notificationManager.createNotificationChannel(mChannel);
-            builder.setChannelId("my_channel_01");
-        }
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.i("onCreate", "onCreate service");
         initMediaSessions();
+        if (mMediaPlayer == null) {
+            Log.i("errr", "mediaPlayer failed to initialize");
+        }
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             String id = "my_channel_01";
 
@@ -142,13 +152,20 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
 
             int importance = NotificationManager.IMPORTANCE_LOW;
 
-            NotificationChannel mChannel = null;
             mChannel = new NotificationChannel(id, name, importance);
             mChannel.setSound(null, null);
             mChannel.setVibrationPattern(new long[0]);
             mChannel.setDescription(description);
             mChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
         }
+    }
+
+    void startNext() {
+        if (SONG_POS != mediaInfoArrayList.size() - 2)
+            SONG_POS++;
+        else
+            SONG_POS = 0;
+        startSong();
     }
 
     void initMediaPlayer() {
@@ -159,6 +176,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
     public int onStartCommand(Intent intent, int flags, int startId) {
 
 
+        Log.i("onCreate", "onStart service");
         handleIntent(intent);
         return super.onStartCommand(intent, flags, startId);
     }
@@ -167,10 +185,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
 
         mSession = new MediaSession(getApplicationContext(), "simple player session");
         mMediaPlayer = new MediaPlayer();
-        initMediaPlayer();
         mMediaPlayer.setOnPreparedListener(this);
         mMediaPlayer.setOnCompletionListener(this);
         mMediaPlayer.setOnErrorListener(this);
+        initMediaPlayer();
         mSession.setCallback(new MediaSession.Callback() {
                                  @Override
                                  public void onPlay() {
@@ -202,10 +220,13 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
                                  @Override
                                  public void onSkipToNext() {
                                      super.onSkipToNext();
-                                     Log.e("MediaPlayerService", "onSkipToNext");
+
                                      if (SONG_POS + 1 == mediaInfoArrayList.size())
                                          SONG_POS = 0;
+                                     else
+                                         SONG_POS++;
                                      startSong();
+                                     Log.e("MediaPlayerService", "onSkipToNext" + mediaInfoArrayList.size() + "  " + mediaInfoArrayList.get(SONG_POS).getSongName());
                                      buildNotification(generateAction(android.R.drawable.ic_media_pause, "Pause", ACTION_PAUSE));
                                  }
 
@@ -216,6 +237,8 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
 
                                      if (SONG_POS == 0)
                                          SONG_POS = mediaInfoArrayList.size() - 1;
+                                     else
+                                         SONG_POS--;
                                      startSong();
                                      buildNotification(generateAction(android.R.drawable.ic_media_pause, "Pause", ACTION_PAUSE));
                                  }
@@ -262,14 +285,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
         );
     }
 
-    @Override
-    public boolean onUnbind(Intent intent) {
-        mSession.release();
-        return super.onUnbind(intent);
-    }
-
     public void startSong() {
-        mMediaPlayer.reset();
+        if (mMediaPlayer != null)
+            mMediaPlayer.reset();
 
         sliderFragment.getInstance().play.setVisibility(View.GONE);
         sliderFragment.getInstance().pause.setVisibility(View.VISIBLE);
@@ -278,7 +296,14 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
 
         sliderFragment.getInstance().updateUi(mediaInfoArrayList.get(SONG_POS));
         try {
-            mMediaPlayer.setDataSource(getApplicationContext(), mediaInfoArrayList.get(SONG_POS).getSong_Uri());
+            if (mMediaPlayer == null)
+                Log.i("werr", "media weerr");
+
+            Uri uri = mediaInfoArrayList.get(SONG_POS).getSong_Uri();
+            if (uri.toString().startsWith("content://"))
+                mMediaPlayer.setDataSource(getApplicationContext(), uri);
+            else
+                mMediaPlayer.setDataSource(uri.toString());
         } catch (IOException e) {
             Log.i("mediaPlayer Exception", "uri exception " + e.getLocalizedMessage());
         }
@@ -294,7 +319,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
         new Thread(() -> {
             int secondsT = (int) (Math.floor((sliderFragment.getInstance().seekBar.getMax() / 1000) % 60));
             int minutesT = (int) (Math.floor((sliderFragment.getInstance().seekBar.getMax() / (1000 * 60)) % 60));
-            sliderFragment.getInstance().tv_totalDuration.setText(minutesT + ":" + secondsT);
+            if (secondsT < 10)
+                sliderFragment.getInstance().tv_totalDuration.setText(minutesT + ":" + 0 + secondsT);
+            else
+                sliderFragment.getInstance().tv_totalDuration.setText(minutesT + ":" + secondsT);
 
 
         }).start();
@@ -310,7 +338,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
 
                     int secondsE = (int) (Math.floor((progress / 1000) % 60));
                     int minutesE = (int) (Math.floor((progress / (1000 * 60)) % 60));
-                    sliderFragment.getInstance().tv_elapsedTime.setText(minutesE + ":" + secondsE);
+                    if (secondsE < 10)
+                        sliderFragment.getInstance().tv_elapsedTime.setText(minutesE + ":" + 0 + secondsE);
+                    else
+                        sliderFragment.getInstance().tv_elapsedTime.setText(minutesE + ":" + secondsE);
 
                 }
 
@@ -347,39 +378,52 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
                 }
             });
 
-
         }).start();
 
     }
 
+    @Override
+    public boolean onUnbind(Intent intent) {
+        mSession.release();
+        return super.onUnbind(intent);
+    }
+
     public void setSelectedSong(ArrayList<MediaInfo> mediaList, int positoin) {
+
         mediaInfoArrayList = mediaList;
         SONG_POS = positoin;
         Log.i("Service", "Service POS" + SONG_POS + " " + mediaList.get(positoin).getSong_Uri());
         startSong();
-    }
-
-
-    public static MediaPlayerService getServiceInstance() {
-        if (serviceInstance == null)
-            serviceInstance = new MediaPlayerService();
-        return serviceInstance;
-    }
-
-
-    @Override
-    public void onCompletion(MediaPlayer mp) {
-        SONG_POS++;
-        startSong();
+        buildNotification(generateAction(android.R.drawable.ic_media_pause, "Pause", ACTION_PAUSE));
     }
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
-        return false;
+
+        Log.i("errr", "mediaPlayer failed to initialize-errro");
+        initMediaSessions();
+
+        return true;
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        if (SONG_POS != mediaInfoArrayList.size() - 1)
+            SONG_POS++;
+        else
+            SONG_POS = 0;
+        startSong();
+    }
+
+    public class PlayerBinder extends Binder {
+        public MediaPlayerService getService() {
+
+            return MediaPlayerService.this;
+        }
     }
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-
+        mp.start();
     }
 }

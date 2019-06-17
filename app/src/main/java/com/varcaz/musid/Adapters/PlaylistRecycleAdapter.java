@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
@@ -18,17 +17,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.varcaz.musid.EntityClass.PlaylistInfo;
-
-import Interfaces.itemClickListener;
-import MediaLoaders.MediaQueries;
-
 import com.varcaz.musid.R;
 
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import Interfaces.itemClickListener;
+import MediaLoaders.MediaQueries;
 
 public class PlaylistRecycleAdapter extends RecyclerView.Adapter<PlaylistRecycleAdapter.PlaylistRecylcleHolder> {  //another attribute probably of playlistInfo class shall be added;
     List<PlaylistInfo> playlistInfoList;
@@ -101,10 +99,10 @@ public class PlaylistRecycleAdapter extends RecyclerView.Adapter<PlaylistRecycle
     @Override
     public void onBindViewHolder(@NonNull PlaylistRecylcleHolder holder, int position) {
 
-        new Thread(() -> {
+//        new Thread(() -> {
             holder.iv_playlist_art.setAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_in));
             holder.singlePlaylist.setAnimation(AnimationUtils.loadAnimation(context, R.anim.scale_out));
-        }).start();
+//        }).start();
         holder.iv_playlist_art.setImageURI(playlistInfoList.get(position).getPlaylistArt());
         holder.tv_playlist_name.setText(playlistInfoList.get(position).getPlatlistName());
         holder.tv_songs_count.setText(String.valueOf(playlistInfoList.get(position).getPlaylistSongCount()));

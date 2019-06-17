@@ -4,29 +4,22 @@ package com.varcaz.musid.Fragments;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.viewpager.widget.ViewPager;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+
 import com.google.android.material.tabs.TabLayout;
 import com.varcaz.musid.Activity.MainActivity;
+import com.varcaz.musid.Adapters.ViewPagerCustomAdapter;
 import com.varcaz.musid.EntityClass.MediaInfo;
 import com.varcaz.musid.R;
-import com.varcaz.musid.Adapters.ViewPagerCustomAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -137,9 +130,6 @@ public class mainFragment extends Fragment {
         });
 
 
-        new Thread(() -> {
-
-
             tabButton.setText(fragmentTitles.get(continuatoinIndex));
             tabLayout.addOnTabSelectedListener(new TabLayout.BaseOnTabSelectedListener() {
                 @Override
@@ -157,7 +147,6 @@ public class mainFragment extends Fragment {
 
                 }
             });
-        }).start();
         return view;
     }
 

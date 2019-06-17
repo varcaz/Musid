@@ -12,6 +12,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,7 +25,6 @@ import com.varcaz.musid.R;
 import java.util.ArrayList;
 
 import Interfaces.songClickListener;
-import MediaPlayer.MediaPlayerService;
 
 public class TrackRecycleAdapter extends RecyclerView.Adapter<TrackRecycleAdapter.TrackRecyclerrHolder> {
 
@@ -44,6 +44,7 @@ public class TrackRecycleAdapter extends RecyclerView.Adapter<TrackRecycleAdapte
         View view = LayoutInflater.from(context).inflate(R.layout.track_item, parent, false);
         final TrackRecyclerrHolder trackRecyclerrHolder = new TrackRecyclerrHolder(view);
         final Dialog dialog = new Dialog(context);
+        dialog.setContentView(R.layout.dialog_track);
         dialog.getWindow().setWindowAnimations(R.style.zoomTransition);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));                                                                                      //custom dialog declaration
         TextView d_songName = dialog.findViewById(R.id.dialog_song_name);
@@ -56,18 +57,14 @@ public class TrackRecycleAdapter extends RecyclerView.Adapter<TrackRecycleAdapte
         Button playbutton=dialog.findViewById(R.id.playbutton_dialog_track);
         Button playnext=dialog.findViewById(R.id.playNextbutton_dialog_track);
 
-//        RelativeLayout relativeLayoutdialog=dialog.findViewById(R.id.dialog_relative_layout);
-//        relativeLayoutdialog.setAlpha(0.8f);
+        RelativeLayout relativeLayoutdialog = dialog.findViewById(R.id.dialog_relative_layout);
+        relativeLayoutdialog.setAlpha(0.9f);
 
 
         trackRecyclerrHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(context, (trackRecyclerrHolder.getAdapterPosition()) + " track named " +
-//                        tracksInfoList.get(trackRecyclerrHolder.getAdapterPosition()).getSongName() + " clicked", Toast.LENGTH_SHORT).show();   //track clicked toast
-
-
-                MediaPlayerService.getServiceInstance().setSelectedSong(tracksInfoList, trackRecyclerrHolder.getAdapterPosition());
+                MainActivity.getServiceInstance().setSelectedSong(tracksInfoList, trackRecyclerrHolder.getAdapterPosition());
 
             }
         });
@@ -92,7 +89,8 @@ public class TrackRecycleAdapter extends RecyclerView.Adapter<TrackRecycleAdapte
                     playbutton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            MediaPlayerService.getServiceInstance().setSelectedSong(tracksInfoList, trackRecyclerrHolder.getAdapterPosition());
+
+                            MainActivity.getServiceInstance().setSelectedSong(tracksInfoList, trackRecyclerrHolder.getAdapterPosition());
                             dialog.dismiss();
 
                         }
@@ -103,9 +101,9 @@ public class TrackRecycleAdapter extends RecyclerView.Adapter<TrackRecycleAdapte
 
                                int pos=trackRecyclerrHolder.getAdapterPosition();
                                         dialog.cancel();
-                            while (MediaPlayerService.getServiceInstance().mMediaPlayer.getCurrentPosition() == MediaPlayerService.getServiceInstance().mMediaPlayer.getDuration()) {
+                            while (MainActivity.getServiceInstance().mMediaPlayer.getCurrentPosition() == MainActivity.getServiceInstance().mMediaPlayer.getDuration()) {
                                         }
-                            MediaPlayerService.getServiceInstance().setSelectedSong(tracksInfoList, pos);
+                            MainActivity.getServiceInstance().setSelectedSong(tracksInfoList, pos);
 
 
 
@@ -130,10 +128,10 @@ public class TrackRecycleAdapter extends RecyclerView.Adapter<TrackRecycleAdapte
 
     @Override
     public void onBindViewHolder(@NonNull TrackRecyclerrHolder holder, int position) {
-        new Thread(() -> {
+//        new Thread(() -> {
             holder.linearLayout.setAnimation(AnimationUtils.loadAnimation(context, R.anim.scale_out));
             holder.linearLayout.setAnimation(AnimationUtils.loadAnimation(context, R.anim.scale_out));
-        }).start();
+//        }).start();
         holder.tv_songName.setText(tracksInfoList.get(position).getSongName());
         holder.tv_artistName.setText(tracksInfoList.get(position).getArtist());
         holder.iv_art.setImageURI(tracksInfoList.get(position).getSong_art());

@@ -1,8 +1,6 @@
 package com.varcaz.musid.Fragments;
 
-import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,24 +13,13 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.makeramen.roundedimageview.RoundedImageView;
-import com.varcaz.musid.Activity.MainActivity;
-import com.varcaz.musid.EntityClass.AlbumInfo;
-import com.varcaz.musid.EntityClass.ArtistsInfo;
-import com.varcaz.musid.EntityClass.MediaInfo;
-import com.varcaz.musid.R;
-import com.google.android.material.tabs.TabLayout;
-import com.varcaz.musid.Adapters.ViewPagerCustomAdapter;
-
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 
-import java.nio.channels.SeekableByteChannel;
-
-import MediaLoaders.DataSource;
-import MediaLoaders.MediaQueries;
-import MediaPlayer.MediaPlayerService;
+import com.makeramen.roundedimageview.RoundedImageView;
+import com.varcaz.musid.Activity.MainActivity;
+import com.varcaz.musid.EntityClass.MediaInfo;
+import com.varcaz.musid.R;
 
 public class sliderFragment extends Fragment {
     LinearLayout nowplaying_linearbar;
@@ -58,7 +45,7 @@ public class sliderFragment extends Fragment {
         return fragment;
     }
 
-    private sliderFragment() {
+    public sliderFragment() {
 
     }
 
@@ -94,7 +81,7 @@ public class sliderFragment extends Fragment {
         new Thread(() -> {
             play.setOnClickListener(view -> {
 
-                MediaPlayerService.getServiceInstance().mSession.getController().getTransportControls().play();
+                MainActivity.getServiceInstance().mSession.getController().getTransportControls().play();
 
             });
         }).start();
@@ -103,7 +90,7 @@ public class sliderFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
 
-                    MediaPlayerService.getServiceInstance().mSession.getController().getTransportControls().skipToNext();
+                    MainActivity.getServiceInstance().mSession.getController().getTransportControls().skipToNext();
                 }
             });
 
@@ -114,7 +101,7 @@ public class sliderFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
 
-                    MediaPlayerService.getServiceInstance().mSession.getController().getTransportControls().skipToNext();
+                    MainActivity.getServiceInstance().mSession.getController().getTransportControls().skipToNext();
                 }
             });
 
@@ -123,7 +110,7 @@ public class sliderFragment extends Fragment {
             prev_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MediaPlayerService.getServiceInstance().mSession.getController().getTransportControls().skipToPrevious();
+                    MainActivity.getServiceInstance().mSession.getController().getTransportControls().skipToPrevious();
                 }
             });
 
@@ -133,7 +120,7 @@ public class sliderFragment extends Fragment {
             prev_main_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MediaPlayerService.getServiceInstance().mSession.getController().getTransportControls().skipToPrevious();
+                    MainActivity.getServiceInstance().mSession.getController().getTransportControls().skipToPrevious();
                 }
             });
 
@@ -142,7 +129,7 @@ public class sliderFragment extends Fragment {
 
         new Thread(() -> {
             pause.setOnClickListener(view -> {
-                MediaPlayerService.getServiceInstance().mSession.getController().getTransportControls().pause();
+                MainActivity.getServiceInstance().mSession.getController().getTransportControls().pause();
             });
 
         }).start();
@@ -150,14 +137,14 @@ public class sliderFragment extends Fragment {
         new Thread(() -> {
             play_main.setOnClickListener(view -> {
 
-                MediaPlayerService.getServiceInstance().mSession.getController().getTransportControls().play();
+                MainActivity.getServiceInstance().mSession.getController().getTransportControls().play();
             });
         }).start();
 
         new Thread(() -> {
             pause_main.setOnClickListener(view -> {
 
-                MediaPlayerService.getServiceInstance().mSession.getController().getTransportControls().pause();
+                MainActivity.getServiceInstance().mSession.getController().getTransportControls().pause();
             });
 
         }).start();
@@ -203,6 +190,10 @@ public class sliderFragment extends Fragment {
         tv_artist.setText(currentSong.getArtist());
         barSongArt.setImageURI(currentSong.getSong_art());
         mainSongArt.setImageURI(currentSong.getSong_art());
+        if (barSongArt.getDrawable() == null) {
+            barSongArt.setImageResource(R.drawable.default_music_art);
+            mainSongArt.setImageResource(R.drawable.default_music_art);
+        }
 
     }
 

@@ -2,7 +2,6 @@ package com.varcaz.musid.Adapters;
 
 
 import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +18,6 @@ import com.varcaz.musid.EntityClass.AlbumInfo;
 import com.varcaz.musid.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import Interfaces.itemClickListener;
 
@@ -56,12 +54,12 @@ public class AlbumRecycleAdapter extends RecyclerView.Adapter<AlbumRecycleAdapte
 
     @Override
     public void onBindViewHolder(@NonNull AlbumRecycleHolder holder, int position) {
-        new Thread(() -> {
+//        new Thread(() -> {
 
             holder.iv_album_art.setAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_in));
             holder.singleAlbum.setAnimation(AnimationUtils.loadAnimation(context, R.anim.scale_out));
 
-        }).start();
+//        }).start();
 
         holder.tv_album_name.setText(albumInfoList.get(position).getAlbumName());
         holder.tv_artist_name.setText(String.valueOf(albumInfoList.get(position).getArtistName()));

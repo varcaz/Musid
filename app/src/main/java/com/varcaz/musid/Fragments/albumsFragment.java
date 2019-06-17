@@ -1,12 +1,12 @@
 package com.varcaz.musid.Fragments;
 
-import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -14,19 +14,12 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.varcaz.musid.Activity.MainActivity;
 import com.varcaz.musid.Adapters.AlbumRecycleAdapter;
 import com.varcaz.musid.EntityClass.AlbumInfo;
-import com.varcaz.musid.EntityClass.MediaInfo;
 import com.varcaz.musid.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import Interfaces.itemClickListener;
 import MediaLoaders.DataSource;
@@ -74,8 +67,9 @@ public class albumsFragment extends Fragment {
 
         }
         recyclerView.setAdapter(new AlbumRecycleAdapter(albumInfoList, getContext(), itemClickListener));
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerView.setItemViewCacheSize(20);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+
 
         return view;
     }

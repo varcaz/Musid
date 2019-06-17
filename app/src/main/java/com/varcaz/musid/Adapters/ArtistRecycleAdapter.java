@@ -2,23 +2,21 @@ package com.varcaz.musid.Adapters;
 
 
 import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.varcaz.musid.EntityClass.ArtistsInfo;
 import com.varcaz.musid.R;
 
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import Interfaces.itemClickListener;
 
@@ -50,11 +48,11 @@ public class ArtistRecycleAdapter extends RecyclerView.Adapter<ArtistRecycleAdap
 
     @Override
     public void onBindViewHolder(@NonNull ArtistRecycleHolder holder, int position) {
-        new Thread(() -> {
+//        new Thread(() -> {
             holder.iv_artist_art.setAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_in));
             holder.singleArtist.setAnimation(AnimationUtils.loadAnimation(context, R.anim.scale_out));
-
-        }).start();
+//
+//        }).start();
         holder.tv_artist_name.setText(artistsInfoList.get(position).getArtistName());
         holder.tv_album_count.setText(String.valueOf(artistsInfoList.get(position).getArtistAlbumCount()));
         holder.tv_song_count.setText(String.valueOf(artistsInfoList.get(position).getArtistSongCount()));

@@ -20,22 +20,24 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
-        <activity android:name=".Activity.MainActivity">
+        <activity
+            android:name=".Activity.MainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name="MediaPlayer.MediaService">
+        <service android:name="MediaPlayer.MediaPlayerService">
             <intent-filter>
-                <action android:name="action_play" />
-                <action android:name="action_pause" />
-                <action android:name="action_rewind" />
-                <action android:name="action_fast_foward" />
-                <action android:name="action_next" />
-                <action android:name="action_previous" />
-                <action android:name="action_stop" />
+                <action android:name="com.varcaz.musid.PLAY" />
+                <action android:name="com.varcaz.musid.PAUSE" />
+                <action android:name="com.varcaz.musid.REWIND" />
+                <action android:name="com.varcaz.musid.FF" />
+                <action android:name="com.varcaz.musid.NEXT" />
+                <action android:name="com.varcaz.musid.PREVIOUS" />
+                <action android:name="com.varcaz.musid.STOP" />
 
             </intent-filter>
         </service>

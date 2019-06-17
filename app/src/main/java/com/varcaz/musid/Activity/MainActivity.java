@@ -19,14 +19,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
-import com.varcaz.musid.Fragments.SearchFragment;
-import com.varcaz.musid.Fragments.onClickItemFragment;
-import com.varcaz.musid.Fragments.mainFragment;
-import com.varcaz.musid.Fragments.sliderFragment;
-import com.varcaz.musid.R;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,6 +29,14 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
+
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
+import com.varcaz.musid.Fragments.SearchFragment;
+import com.varcaz.musid.Fragments.mainFragment;
+import com.varcaz.musid.Fragments.onClickItemFragment;
+import com.varcaz.musid.Fragments.sliderFragment;
+import com.varcaz.musid.R;
 
 import MediaLoaders.MediaQueries;
 import MediaPlayer.MediaPlayerService;
@@ -51,16 +51,37 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private final String mainActivityPreferences = "mainActivityPreferences";
     private final String backgroundIndexTAG = "backgroundIndexTAG";
     public int STORAGE_READ_CODE = 1;
+    private static MediaPlayerService mediaPlayerService;
 
     @Override
     protected void onStop() {
         super.onStop();
     }
 
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            MediaPlayerService.PlayerBinder binder = (MediaPlayerService.PlayerBinder) service;
+
+            mediaPlayerService = binder.getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
+
+    public static MediaPlayerService getServiceInstance() {
+        return mediaPlayerService;
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
-        startService(new Intent(this, MediaPlayerService.class));
+        Intent serviceIntent = new Intent(this, MediaPlayerService.class);
+        bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
+        startService(serviceIntent);
     }
 
     @Override
@@ -95,19 +116,20 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
 
         //background loading
-        new Thread(() -> {
+//        new Thread(() -> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 getWindow().getDecorView().setBackground(null);
             }
             int id = getApplication().getResources().getIdentifier("background" + sharedPreferences.getInt(backgroundIndexTAG, 4), "drawable", getApplicationContext().getPackageName());
             getWindow().getDecorView().setBackgroundResource(id);
-        }).start();
-        new Thread(() -> changeBackground()).start();//thread to change background
+//        }).start();
+        new Thread(() -> changeBackgroundListener()).start();//thread to change background
 
-        new Thread(() -> {
+
+//        new Thread(() -> {
             FragmentTransaction sliderTransaction = getSupportFragmentManager().beginTransaction();                               //slider thread
             sliderTransaction.add(R.id.slider_container, sliderFragment.getInstance()).commit();
-        }).start();
+//        }).start();
         new Thread(() -> {
 
             slidinglayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
@@ -119,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
                 @Override
                 public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
-                    if (newState == PanelState.DRAGGING || newState == PanelState.EXPANDED) {
+                    if (newState != PanelState.COLLAPSED) {
                         panel.findViewById(R.id.nowplaying_linearlayout).setVisibility(View.GONE);
                         panel.findViewById(R.id.tv_now_playing).setVisibility(View.VISIBLE);
                     } else {
@@ -132,37 +154,23 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         }).start();
 
-//        Handler handler=new Handler();
-//        this.runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                if (mediaService != null && mediaService.mState == mediaService.STATE_PLAYING) {
-//                    Log.i("Run", "RUN HANDLER ");
-//                    int currentPos = mediaService.mediaPlayer.getCurrentPosition();
-//                    sliderFragment.getInstance().seekBar.setProgress(currentPos);
-//                    handler.postDelayed(this, 500);
-//                }
-//            }
-//        });
-
         Handler mHandler = new Handler();
+
 //Make sure you update Seekbar on UI thread
         MainActivity.this.runOnUiThread(new Runnable() {
 
             @Override
             public void run() {
-                if (MediaPlayerService.getServiceInstance().mMediaPlayer != null) {
-                    int mCurrentPosition = MediaPlayerService.getServiceInstance().mMediaPlayer.getCurrentPosition();
+                if (mediaPlayerService != null && mediaPlayerService.mMediaPlayer != null) {
+                    int mCurrentPosition = mediaPlayerService.mMediaPlayer.getCurrentPosition();
                     sliderFragment.getInstance().seekBar.setProgress(mCurrentPosition);
+
                 }
-                mHandler.postDelayed(this, 1000);
+                mHandler.postDelayed(this, 100);
             }
         });
 
     }
-
-
-
 
 
     public void onClickFragmentReplacer(int id, String table, String title, Uri art) {
@@ -194,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         if (requestCode == STORAGE_READ_CODE) {
             if (grantResults.length > 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                 loadEverything();
+                Log.i("per", "in permissoin check function");
             }
         }
     }
@@ -202,6 +211,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     protected void onPause() {
         super.onPause();
         editor.putInt(backgroundIndexTAG, backgroundIndex).commit();
+
     }
 
     @Override
@@ -236,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private int i = 0;
 
-    void changeBackground() {
+    void changeBackgroundListener() {
         bt_backgroundChanger.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -271,10 +281,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         getSupportLoaderManager().initLoader(1, null, this);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();                                 //mainFragment loading
         fragmentTransaction.replace(R.id.main_fragment_container, mainFragment).commit();
+        Log.i("load", "load finish function");
 
     }
-
-
 
 
     @NonNull
@@ -291,6 +300,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         MediaQueries.LoadAllSongs(getApplicationContext(), data);
+        Log.i("load", "load finish");
     }
 
     @Override
