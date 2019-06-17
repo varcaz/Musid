@@ -111,16 +111,14 @@ public class onClickItemFragment extends Fragment {
                 }
             });
         }).start();
-        new Thread(() -> {
-            backButton.setOnClickListener(new View.OnClickListener() {
+
+        backButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ((MainActivity) getActivity()).onBackPressed();
                 }
             });
 
-
-        }).start();
 
         if (table.equalsIgnoreCase("playlist")) {
             addSongBtn.setVisibility(View.VISIBLE);

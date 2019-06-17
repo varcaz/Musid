@@ -33,7 +33,6 @@ import java.nio.channels.SeekableByteChannel;
 import MediaLoaders.DataSource;
 import MediaLoaders.MediaQueries;
 import MediaPlayer.MediaPlayerService;
-import MediaPlayer.MediaService;
 
 public class sliderFragment extends Fragment {
     LinearLayout nowplaying_linearbar;
@@ -95,7 +94,7 @@ public class sliderFragment extends Fragment {
         new Thread(() -> {
             play.setOnClickListener(view -> {
 
-                MediaPlayerService.getServiceInstance().playPauseSong();
+                MediaPlayerService.getServiceInstance().mSession.getController().getTransportControls().play();
 
             });
         }).start();
@@ -103,7 +102,8 @@ public class sliderFragment extends Fragment {
             next_main_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MediaPlayerService.getServiceInstance().playNext();
+
+                    MediaPlayerService.getServiceInstance().mSession.getController().getTransportControls().skipToNext();
                 }
             });
 
@@ -113,7 +113,8 @@ public class sliderFragment extends Fragment {
             next_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MediaPlayerService.getServiceInstance().playNext();
+
+                    MediaPlayerService.getServiceInstance().mSession.getController().getTransportControls().skipToNext();
                 }
             });
 
@@ -122,7 +123,7 @@ public class sliderFragment extends Fragment {
             prev_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MediaPlayerService.getServiceInstance().playPrevious();
+                    MediaPlayerService.getServiceInstance().mSession.getController().getTransportControls().skipToPrevious();
                 }
             });
 
@@ -132,7 +133,7 @@ public class sliderFragment extends Fragment {
             prev_main_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MediaPlayerService.getServiceInstance().playPrevious();
+                    MediaPlayerService.getServiceInstance().mSession.getController().getTransportControls().skipToPrevious();
                 }
             });
 
@@ -141,7 +142,7 @@ public class sliderFragment extends Fragment {
 
         new Thread(() -> {
             pause.setOnClickListener(view -> {
-                MediaPlayerService.getServiceInstance().playPauseSong();
+                MediaPlayerService.getServiceInstance().mSession.getController().getTransportControls().pause();
             });
 
         }).start();
@@ -149,21 +150,21 @@ public class sliderFragment extends Fragment {
         new Thread(() -> {
             play_main.setOnClickListener(view -> {
 
-                MediaPlayerService.getServiceInstance().playPauseSong();
+                MediaPlayerService.getServiceInstance().mSession.getController().getTransportControls().play();
             });
         }).start();
 
         new Thread(() -> {
             pause_main.setOnClickListener(view -> {
 
-                MediaPlayerService.getServiceInstance().playPauseSong();
+                MediaPlayerService.getServiceInstance().mSession.getController().getTransportControls().pause();
             });
 
         }).start();
 
         new Thread(() -> {
             shuffle_check.setOnClickListener(view -> {
-                if (fav_check.isChecked()) {
+                if (shuffle_check.isChecked()) {
                     Toast.makeText(getContext(), "Shuffling enabled", Toast.LENGTH_SHORT).show();
                 } else
                     Toast.makeText(getContext(), "Shuffling disabled", Toast.LENGTH_SHORT).show();
@@ -173,7 +174,7 @@ public class sliderFragment extends Fragment {
         new Thread(() -> {
 
             loop_check.setOnClickListener(view -> {
-                if (fav_check.isChecked()) {
+                if (loop_check.isChecked()) {
 
                     Toast.makeText(getContext(), "looping enabled", Toast.LENGTH_SHORT).show();
                 } else

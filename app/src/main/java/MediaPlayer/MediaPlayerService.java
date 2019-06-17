@@ -44,9 +44,6 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
     public static final String ACTION_STOP = "action_stop";
 
 
-    public static final int STATE_PAUSED = 1;
-    public static final int STATE_PLAYING = 2;
-    public int mState = 0;
 
     private int SONG_POS;
     private int NOTIFICATION_ID = 1121;
@@ -54,9 +51,8 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
     private static MediaPlayerService serviceInstance;
 
     public MediaPlayer mMediaPlayer;
-    private MediaSessionManager mManager;
-    private MediaSession mSession;
-    private MediaController mController;
+    public MediaSessionManager mManager;
+    public MediaSession mSession;
     NotificationChannel mChannel = null;
 
 
@@ -72,19 +68,20 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
         String action = intent.getAction();
 
         if (action.equalsIgnoreCase(ACTION_PLAY)) {
-            mController.getTransportControls().play();
+
+            mSession.getController().getTransportControls().play();
         } else if (action.equalsIgnoreCase(ACTION_PAUSE)) {
-            mController.getTransportControls().pause();
+            mSession.getController().getTransportControls().pause();
         } else if (action.equalsIgnoreCase(ACTION_FAST_FORWARD)) {
-            mController.getTransportControls().fastForward();
+            mSession.getController().getTransportControls().fastForward();
         } else if (action.equalsIgnoreCase(ACTION_REWIND)) {
-            mController.getTransportControls().rewind();
+            mSession.getController().getTransportControls().rewind();
         } else if (action.equalsIgnoreCase(ACTION_PREVIOUS)) {
-            mController.getTransportControls().skipToPrevious();
+            mSession.getController().getTransportControls().skipToPrevious();
         } else if (action.equalsIgnoreCase(ACTION_NEXT)) {
-            mController.getTransportControls().skipToNext();
+            mSession.getController().getTransportControls().skipToNext();
         } else if (action.equalsIgnoreCase(ACTION_STOP)) {
-            mController.getTransportControls().stop();
+            mSession.getController().getTransportControls().stop();
         }
     }
 
@@ -135,6 +132,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
     @Override
     public void onCreate() {
         super.onCreate();
+        initMediaSessions();
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             String id = "my_channel_01";
 
@@ -159,27 +157,25 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (mManager == null) {
-            initMediaSessions();
-        }
+
 
         handleIntent(intent);
         return super.onStartCommand(intent, flags, startId);
     }
 
     private void initMediaSessions() {
+
+        mSession = new MediaSession(getApplicationContext(), "simple player session");
         mMediaPlayer = new MediaPlayer();
         initMediaPlayer();
         mMediaPlayer.setOnPreparedListener(this);
         mMediaPlayer.setOnCompletionListener(this);
         mMediaPlayer.setOnErrorListener(this);
-        mSession = new MediaSession(getApplicationContext(), "simple player session");
         mSession.setCallback(new MediaSession.Callback() {
                                  @Override
                                  public void onPlay() {
                                      super.onPlay();
                                      mMediaPlayer.start();
-                                     mState = STATE_PLAYING;
                                      sliderFragment.getInstance().play.setVisibility(View.VISIBLE);
                                      sliderFragment.getInstance().pause.setVisibility(View.GONE);
                                      sliderFragment.getInstance().play_main.setVisibility(View.VISIBLE);
@@ -193,7 +189,6 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
                                  public void onPause() {
                                      super.onPause();
                                      mMediaPlayer.pause();
-                                     mState = STATE_PAUSED;
                                      sliderFragment.getInstance().play.setVisibility(View.GONE);
                                      sliderFragment.getInstance().pause.setVisibility(View.VISIBLE);
                                      sliderFragment.getInstance().play_main.setVisibility(View.GONE);
@@ -208,7 +203,9 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
                                  public void onSkipToNext() {
                                      super.onSkipToNext();
                                      Log.e("MediaPlayerService", "onSkipToNext");
-                                     //Change media here
+                                     if (SONG_POS + 1 == mediaInfoArrayList.size())
+                                         SONG_POS = 0;
+                                     startSong();
                                      buildNotification(generateAction(android.R.drawable.ic_media_pause, "Pause", ACTION_PAUSE));
                                  }
 
@@ -216,7 +213,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
                                  public void onSkipToPrevious() {
                                      super.onSkipToPrevious();
                                      Log.e("MediaPlayerService", "onSkipToPrevious");
-                                     //Change media here
+
+                                     if (SONG_POS == 0)
+                                         SONG_POS = mediaInfoArrayList.size() - 1;
+                                     startSong();
                                      buildNotification(generateAction(android.R.drawable.ic_media_pause, "Pause", ACTION_PAUSE));
                                  }
 
@@ -224,14 +224,18 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
                                  public void onFastForward() {
                                      super.onFastForward();
                                      Log.e("MediaPlayerService", "onFastForward");
-                                     //Manipulate current media here
+                                     mMediaPlayer.seekTo(mMediaPlayer.getCurrentPosition() + 5000);
                                  }
 
                                  @Override
                                  public void onRewind() {
                                      super.onRewind();
                                      Log.e("MediaPlayerService", "onRewind");
-                                     //Manipulate current media here
+                                     if (mMediaPlayer.getCurrentPosition() - 5000 > 0)
+                                         mMediaPlayer.seekTo(mMediaPlayer.getCurrentPosition() - 5000);
+                                     else
+                                         mMediaPlayer.seekTo(0);
+
                                  }
 
                                  @Override
@@ -266,7 +270,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
 
     public void startSong() {
         mMediaPlayer.reset();
-        mState = STATE_PLAYING;
+
         sliderFragment.getInstance().play.setVisibility(View.GONE);
         sliderFragment.getInstance().pause.setVisibility(View.VISIBLE);
         sliderFragment.getInstance().play_main.setVisibility(View.GONE);
