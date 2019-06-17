@@ -32,13 +32,10 @@ import java.nio.channels.SeekableByteChannel;
 
 import MediaLoaders.DataSource;
 import MediaLoaders.MediaQueries;
+import MediaPlayer.MediaPlayerService;
 import MediaPlayer.MediaService;
 
 public class sliderFragment extends Fragment {
-    MediaMetadataRetriever mediaMetadataRetriever;
-    private ViewPager viewPager;
-    private TabLayout tabLayout;
-    private ViewPagerCustomAdapter adapter;
     LinearLayout nowplaying_linearbar;
     public ImageButton play, pause, play_main, pause_main, prev_btn, prev_main_btn, next_btn, next_main_btn;
     TextView tv_nowPlaying, tv_artist;
@@ -98,7 +95,7 @@ public class sliderFragment extends Fragment {
         new Thread(() -> {
             play.setOnClickListener(view -> {
 
-                MainActivity.getServiceInstance().playPauseSong();
+                MediaPlayerService.getServiceInstance().playPauseSong();
 
             });
         }).start();
@@ -106,7 +103,7 @@ public class sliderFragment extends Fragment {
             next_main_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MainActivity.getServiceInstance().playNext();
+                    MediaPlayerService.getServiceInstance().playNext();
                 }
             });
 
@@ -116,7 +113,7 @@ public class sliderFragment extends Fragment {
             next_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MainActivity.getServiceInstance().playNext();
+                    MediaPlayerService.getServiceInstance().playNext();
                 }
             });
 
@@ -125,7 +122,7 @@ public class sliderFragment extends Fragment {
             prev_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MainActivity.getServiceInstance().playPrevious();
+                    MediaPlayerService.getServiceInstance().playPrevious();
                 }
             });
 
@@ -135,7 +132,7 @@ public class sliderFragment extends Fragment {
             prev_main_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MainActivity.getServiceInstance().playPrevious();
+                    MediaPlayerService.getServiceInstance().playPrevious();
                 }
             });
 
@@ -144,7 +141,7 @@ public class sliderFragment extends Fragment {
 
         new Thread(() -> {
             pause.setOnClickListener(view -> {
-                MainActivity.getServiceInstance().playPauseSong();
+                MediaPlayerService.getServiceInstance().playPauseSong();
             });
 
         }).start();
@@ -152,14 +149,14 @@ public class sliderFragment extends Fragment {
         new Thread(() -> {
             play_main.setOnClickListener(view -> {
 
-                MainActivity.getServiceInstance().playPauseSong();
+                MediaPlayerService.getServiceInstance().playPauseSong();
             });
         }).start();
 
         new Thread(() -> {
             pause_main.setOnClickListener(view -> {
 
-                MainActivity.getServiceInstance().playPauseSong();
+                MediaPlayerService.getServiceInstance().playPauseSong();
             });
 
         }).start();

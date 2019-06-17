@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:dist="http://schemas.android.com/apk/distribution"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.varcaz.musid">
 
     <dist:module dist:instant="true" />
@@ -8,7 +9,9 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
+    <uses-permission
+        android:name="android.permission.MEDIA_CONTENT_CONTROL"
+        tools:ignore="ProtectedPermissions" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -26,12 +29,22 @@
         </activity>
         <service android:name="MediaPlayer.MediaService">
             <intent-filter>
-                <action android:name="com.varcaz.musid.PREVIOUS" />
-                <action android:name="com.varcaz.musid.NEXT" />
-                <action android:name="com.varcaz.musid.STOP" />
-                <action android:name="com.varcaz.musid.PAUSE" />
+                <action android:name="action_play" />
+                <action android:name="action_pause" />
+                <action android:name="action_rewind" />
+                <action android:name="action_fast_foward" />
+                <action android:name="action_next" />
+                <action android:name="action_previous" />
+                <action android:name="action_stop" />
+
             </intent-filter>
         </service>
+        <!--<receiver android:name=".RemoteControlReciever">-->
+        <!--<intent-filter >-->
+        <!--<action android:name="android.intent.action.MEDIA_BUTTON"/>-->
+        <!--</intent-filter>-->
+
+        <!--</receiver>-->
     </application>
 
 </manifest>

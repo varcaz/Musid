@@ -152,7 +152,6 @@ public class onClickItemFragment extends Fragment {
                                 @Override
                                 public void onClick(View v) {
 
-                                    AddSongsAdapter.initInterface(selectedSongsPasserInterface);
 
                                     boolean alreadyexists = false;
                                     for (int id : songIDs) {

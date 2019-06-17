@@ -29,7 +29,7 @@
             android:background="@null"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:paddingTop="60dp">
+            android:paddingTop="70dp">
 
             <TextView
                 android:id="@+id/tv_album_item_name"
@@ -83,7 +83,7 @@
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/iv_album_art"
         android:layout_width="130dp"
-        android:layout_height="130dp"
+        android:layout_height="140dp"
         app:riv_border_color="@color/subtextColor"
         app:riv_border_width="1dp"
         android:layout_alignParentTop="true"
@@ -93,5 +93,5 @@
         android:foregroundGravity="center_horizontal"
         android:scaleType="centerCrop"
         android:src="@drawable/default_music_art"
-        app:riv_corner_radius="70dp" />
+        app:riv_corner_radius="60dp" />
 </RelativeLayout>

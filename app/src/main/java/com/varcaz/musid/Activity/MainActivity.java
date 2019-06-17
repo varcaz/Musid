@@ -39,17 +39,15 @@ import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
 
 import MediaLoaders.MediaQueries;
-import MediaPlayer.MediaService;
+import MediaPlayer.MediaPlayerService;
 
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private SlidingUpPanelLayout slidinglayout;
-    private static MediaService mediaService;
     public Button bt_backgroundChanger;
     private Fragment mainFragment;
-    private Intent serviceIntent;
     private final String mainActivityPreferences = "mainActivityPreferences";
     private final String backgroundIndexTAG = "backgroundIndexTAG";
     public int STORAGE_READ_CODE = 1;
@@ -62,9 +60,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     protected void onStart() {
         super.onStart();
-        serviceIntent = new Intent(this, MediaService.class);
-        bindService(serviceIntent, mediaConnection, Context.BIND_AUTO_CREATE);
-        startService(serviceIntent);
+        startService(new Intent(this, MediaPlayerService.class));
     }
 
     @Override
@@ -155,8 +151,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
             @Override
             public void run() {
-                if (mediaService != null && mediaService.mediaPlayer != null) {
-                    int mCurrentPosition = mediaService.mediaPlayer.getCurrentPosition();
+                if (MediaPlayerService.getServiceInstance().mMediaPlayer != null) {
+                    int mCurrentPosition = MediaPlayerService.getServiceInstance().mMediaPlayer.getCurrentPosition();
                     sliderFragment.getInstance().seekBar.setProgress(mCurrentPosition);
                 }
                 mHandler.postDelayed(this, 1000);
@@ -166,20 +162,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
 
-    private ServiceConnection mediaConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            MediaService.PlayerBinder binder = (MediaService.PlayerBinder) service;
-            mediaService = binder.getService();
 
-
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-
-        }
-    };
 
 
     public void onClickFragmentReplacer(int id, String table, String title, Uri art) {
@@ -224,7 +207,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unbindService(mediaConnection);
         editor.putInt("backgroundIndex", backgroundIndex).commit();
     }
 
@@ -293,9 +275,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
 
-    public static MediaService getServiceInstance() {
-        return mediaService;
-    }
 
 
     @NonNull
